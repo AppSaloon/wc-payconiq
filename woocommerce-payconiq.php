@@ -2,7 +2,7 @@
 /*
 Plugin Name: WooCommerce - Payconiq
 Plugin URI:
-Description: Boilerplate plugin
+Description: Accept payments in your WooCommerce webshop through the Payconiq app. Make it even more easy for your customers to order. Just by scanning a QR-code.
 Version: 1.0
 Author: AppSaloon
 Author URI: https://www.appsaloon.be/
