@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "201899dc63377043c49159a10773dd47",
+    "content-hash": "d39e4fbd97059968174b949a1445c23b",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -36,6 +36,31 @@
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
             "time": "2017-02-14T19:40:03+00:00"
+        },
+        {
+            "name": "eventsquare/payconiq",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EventSquare/payconiq-api-php.git",
+                "reference": "742b884dacba3ee4356fa9d8fafe213be8dee426"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EventSquare/payconiq-api-php/zipball/742b884dacba3ee4356fa9d8fafe213be8dee426",
+                "reference": "742b884dacba3ee4356fa9d8fafe213be8dee426",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Glenn Engelen",
+                    "email": "glenn.engelen@eventsquare.co"
+                }
+            ],
+            "description": "Payconiq API client for PHP",
+            "time": "2017-06-29T16:34:13+00:00"
         },
         {
             "name": "php-di/invoker",

@@ -2,6 +2,10 @@
 
 namespace wc_payconiq\model;
 
+use \Payconiq\Client;
+use \Payconiq\Support\Exceptions\CreateTransactionFailedException;
+use wc_payconiq\lib\Payconiq_Client;
+
 class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 
 	CONST ID = 'Wc_Gateway_Payconiq';
@@ -25,7 +29,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                 = 'payconiq';
-		$this->has_fields         = true;
+		$this->has_fields         = false;
 		$this->order_button_text  = __( 'Proceed to Payconiq', 'woocommerce' );
 		$this->method_title       = __( 'Payconiq', 'woocommerce' );
 		$this->method_description = __( 'Take payments through Payconiq app.', 'woocommerce' );
@@ -53,6 +57,11 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 			$this->description .= ' ' . __( 'SANDBOX ENABLED. You can use sandbox testing accounts only.', 'woocommerce' );
 			$this->description = trim( $this->description );
 		}
+
+		/**
+		 * Callback handler
+		 */
+		new Wc_Gateway_Payconiq_Callback_Handler( $this->testmode );
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
@@ -104,35 +113,42 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	}
 
 	public function process_payment( $order_id ) {
-		global $woocommerce;
-		$order = new \WC_Order( $order_id );
+		$order = wc_get_order( $order_id );
 
-		// mark as payment complete
-		$order->payment_complete();
+		/**
+		 * Create callback url with order ID
+		 */
+		$callbackUrl = add_query_arg( 'wc-api', 'Wc_Gateway_Payconiq', home_url( '/' ) );
 
-		// Reduce stock levels
-		wc_reduce_stock_levels( $order_id );
+		/**
+		 * @var \wc_payconiq\lib\Payconiq_Client
+		 */
+		$payconiq = ( ! $this->testmode ) ? new Payconiq_Client( $this->get_option( 'api_merchant_id' ), $this->get_option( 'api_key' ) ) : new Payconiq_Client( $this->get_option( 'sandbox_api_merchant_id' ), $this->get_option( 'sandbox_api_key' ) );
 
-		// Remove cart
-		$woocommerce->cart->empty_cart();
+		/**
+		 * Create Transaction ID
+		 */
+		try {
+			$transaction_id = $payconiq->createTransaction( $order->get_total(), $order->get_currency(), $callbackUrl );
+			Wc_Gateway_Payconiq::log( 'Transaction ID( ' . $transaction_id . ' ) is created for the order id ' . $order_id, 'info' );
+		} catch ( \Exception $e ) {
+			Wc_Gateway_Payconiq::log( 'Transaction is not created in Payconiq', 'error' );
+			wp_die( 'Payconiq Request Failure', 'Payconiq transaction', array( 'response' => 500 ) );
+		}
 
-		// Return thankyou redirect
+		/**
+		 * Save Transaction ID in the order
+		 */
+		$order->add_meta_data( '_payconiq_transaction_id', $transaction_id );
+
+		/**
+		 * Assemble QR code content
+		 */
+		$qrcode = 'https://payconiq.com/pay/1/' . $transaction_id;
+
 		return array(
 			'result'   => 'success',
-			'redirect' => $this->get_return_url( $order )
+			'redirect' => $qrcode,
 		);
-	}
-
-	public function payment_fields() {
-		$description = $this->get_description();
-
-		$this->credit_card_form();
-		if ( $description ) {
-			echo wpautop( wptexturize( $description ) ); // @codingStandardsIgnoreLine.
-		}
-
-		if ( $this->supports( 'default_credit_card_form' ) ) {
-			$this->credit_card_form(); // Deprecated, will be removed in a future version.
-		}
 	}
 }
