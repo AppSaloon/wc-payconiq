@@ -63,8 +63,24 @@ return array(
 		/* translators: %s: URL */
 		'description' => __( 'Enter your Payconiq API credentials to process refunds via Payconiq.', 'woocommerce' ),
 	),
+	'api_merchant_id'          => array(
+		'title'       => __( 'Merchant API ID', 'woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API credentials from Payconiq.', 'woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+		'placeholder' => __( 'Optional', 'woocommerce' ),
+	),
 	'api_key'          => array(
 		'title'       => __( 'Live API key', 'woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Get your API credentials from Payconiq.', 'woocommerce' ),
+		'default'     => '',
+		'desc_tip'    => true,
+		'placeholder' => __( 'Optional', 'woocommerce' ),
+	),
+	'sandbox_api_merchant_id'          => array(
+		'title'       => __( 'Sandbox Merchant API ID', 'woocommerce' ),
 		'type'        => 'text',
 		'description' => __( 'Get your API credentials from Payconiq.', 'woocommerce' ),
 		'default'     => '',
