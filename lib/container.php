@@ -1,6 +1,6 @@
 <?php
 
-namespace appsaloon\lib;
+namespace wc_payconiq\lib;
 
 use \DI;
 use DI\ContainerBuilder;
@@ -9,21 +9,29 @@ Final class Container implements Container_Interface {
 
 	/**
 	 * @var \DI\ContainerBuilder
+	 *
+	 * @since 1.0.0
 	 */
 	protected $builder;
 
 	/**
 	 * @var \DI\Container
+	 *
+	 * @since 1.0.0
 	 */
 	public $container;
 
 	/**
 	 * @var Container
+	 *
+	 * @since 1.0.0
 	 */
 	protected static $instance;
 
 	/**
 	 * Build Container.
+	 *
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		$this->builder = new ContainerBuilder();
@@ -37,10 +45,11 @@ Final class Container implements Container_Interface {
 	 * Instance of this class
 	 *
 	 * @return Container
+	 *
+	 * @since 1.0.0
 	 */
-	public static function getInstance()
-	{
-		if( null == static::$instance ){
+	public static function getInstance() {
+		if ( null == static::$instance ) {
 			static::$instance = new static();
 		}
 
@@ -48,29 +57,32 @@ Final class Container implements Container_Interface {
 	}
 
 	/**
-	 * Build Container
+	 * Define config classes
+	 *
+	 * @since 1.0.0
 	 */
 	public function build_container() {
-		$this->builder->addDefinitions( [
-			'plugin_activate'   => DI\object( 'appsaloon\config\Plugin_Activate' ),
-			'plugin_deactivate' => DI\object( 'appsaloon\config\Plugin_Deactivate' ),
-			'log'               => DI\object( 'appsaloon\lib\Log' )
-		] );
+		$this->builder->addDefinitions( array(
+			'plugin_activate'   => DI\object( 'wc_payconiq\config\Plugin_Activate' ),
+			'plugin_deactivate' => DI\object( 'wc_payconiq\config\Plugin_Deactivate' )
+		) );
 
 		$this->container = $this->builder->build();
 
 		/**
 		 * Set init config with container as parameter
 		 */
-		$this->container->set( 'init_config', DI\object( 'appsaloon\config\Example_Config' ) );
+		$this->container->set( 'init_config', DI\object( 'wc_payconiq\config\Init_Config' ) );
 	}
 
 	/**
 	 * Set classes that needs to be used
+	 *
+	 * @since 1.0.0
 	 */
 	public function set_classes() {
-		$this->container->set( 'example_controller', \DI\object( 'appsaloon\controller\Example_Controller' ) );
-		$this->container->set( 'base_controller', \DI\object( 'appsaloon\controller\Base_Controller' ) );
-		$this->container->set( 'example_model', \DI\object( 'appsaloon\model\Example_Model' ) );
+		$this->container->set( 'example_controller', \DI\object( 'wc_payconiq\controller\Example_Controller' ) );
+		$this->container->set( 'base_controller', \DI\object( 'wc_payconiq\controller\Base_Controller' ) );
+		$this->container->set( 'example_model', \DI\object( 'wc_payconiq\model\Example_Model' ) );
 	}
 }

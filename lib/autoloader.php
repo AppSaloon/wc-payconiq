@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Class Appsaloon_Autoloader
+ * Class Wc_Payconic_Autoloader
  *
  * @since 1.1.0
  */
-class Appsaloon_Autoloader {
+class Wc_Payconiq_Autoloader {
 
 	/**
 	 * plugin root namespace
 	 *
 	 * @sice 1.1.0
 	 */
-	const ROOT_NAMESPACE = 'appsaloon\\';
+	const ROOT_NAMESPACE = 'wc_payconiq\\';
 
 	/**
 	 * Register autoload method
@@ -20,7 +20,7 @@ class Appsaloon_Autoloader {
 	 * @since 1.1.0
 	 */
 	public function __construct() {
-		spl_autoload_register( array( $this, 'appsaloon_autoloader_callback' ) );
+		spl_autoload_register( array( $this, 'wc_payconiq_autoloader_callback' ) );
 	}
 
 	/**
@@ -31,13 +31,13 @@ class Appsaloon_Autoloader {
 	 *
 	 * @since 1.1.0
 	 */
-	public function appsaloon_autoloader_callback($class) {
+	public function wc_payconiq_autoloader_callback($class) {
 		if ( strpos( $class, self::ROOT_NAMESPACE ) === 0 ) {
 			$path = substr( $class, strlen( self::ROOT_NAMESPACE ) );
 			$path = strtolower( $path );
 			$path = str_replace( '_', '-', $path );
 			$path = str_replace( '\\', DIRECTORY_SEPARATOR, $path ) . '.php';
-			$path = EXAMPLE_DIR . DIRECTORY_SEPARATOR . $path;
+			$path = WC_PAYCONIQ_DIR . DIRECTORY_SEPARATOR . $path;
 
 			if ( file_exists( $path ) ) {
 				include $path;
@@ -51,4 +51,4 @@ class Appsaloon_Autoloader {
  *
  * @since 1.1.0
  */
-new Appsaloon_Autoloader();
+new Wc_Payconiq_Autoloader();

@@ -9,19 +9,20 @@ Author URI: https://www.appsaloon.be/
 License: GPLv3
 */
 
-namespace appsaloon;
+namespace wc_payconiq;
 
-use appsaloon\lib\Container;
-use appsaloon\lib\Container_Interface;
+use wc_payconiq\lib\Container;
+use wc_payconiq\lib\Container_Interface;
 
-define( 'EXAMPLE_DIR', plugin_dir_path( __FILE__ ) );
-define( 'EXAMPLE_URL', plugin_dir_url( __FILE__ ) );
-define( 'EXAMPLE_VERSION', '1.0' );
+define( 'WC_PAYCONIQ_DIR', plugin_dir_path( __FILE__ ) );
+define( 'WC_PAYCONIQ_URL', plugin_dir_url( __FILE__ ) );
+define( 'WC_PAYCONIQ_FILE', __FILE__ );
+define( 'WC_PAYCONIQ_VERSION', '1.0' );
 
 /**
  * Register autoloader to load files/classes dynamically
  */
-include_once EXAMPLE_DIR . 'lib/autoloader.php';
+include_once WC_PAYCONIQ_DIR . 'lib/autoloader.php';
 
 /**
  * Load composer/PHP-DI container
@@ -30,9 +31,9 @@ include_once EXAMPLE_DIR . 'lib/autoloader.php';
  *
  * "php-di/php-di": "5.0"
  */
-include_once EXAMPLE_DIR . 'lib/ioc/autoload.php';
+include_once WC_PAYCONIQ_DIR . 'lib/ioc/autoload.php';
 
-class Plugin_Boilerplate {
+class Woocommerce_Payconiq {
 
 	/**
 	 * Plugin_Boilerplate constructor.
@@ -47,4 +48,4 @@ class Plugin_Boilerplate {
 	}
 }
 
-new Plugin_Boilerplate( Container::getInstance() );
+new Woocommerce_Payconiq( Container::getInstance() );
