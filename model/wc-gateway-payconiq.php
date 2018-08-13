@@ -2,8 +2,7 @@
 
 namespace wc_payconiq\model;
 
-use \Payconiq\Client;
-use \Payconiq\Support\Exceptions\CreateTransactionFailedException;
+use chillerlan\QRCode\QRCode;
 use wc_payconiq\lib\Payconiq_Client;
 
 class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
@@ -63,10 +62,17 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		 */
 		new Wc_Gateway_Payconiq_Callback_Handler( $this->testmode );
 
+		add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'render_receipt_page' ) );
+
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
 			'process_admin_options'
 		) );
+
+		add_action( 'woocommerce_admin_order_data_after_billing_address', array(
+			$this,
+			'show_transaction_id_in_backend'
+		), 10, 1 );
 	}
 
 	/**
@@ -115,10 +121,40 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
+		return array(
+			'result'   => 'success',
+			'redirect' => $order->get_checkout_payment_url( true ),
+		);
+	}
+
+	/**
+	 * Renders the receipt page.
+	 *
+	 * @param int $order_id WooCommerce Order ID.
+	 */
+	public function render_receipt_page( $order_id ) {
+		$order = wc_get_order( $order_id );
+
 		/**
-		 * Create callback url with order ID
+		 * If currency is not EUR
 		 */
-		$callbackUrl = add_query_arg( 'wc-api', 'Wc_Gateway_Payconiq', home_url( '/' ) );
+		if ( $order->get_currency() != 'EUR' ) {
+			wp_die( 'payconiq works only with EUR ', array(
+				'response',
+				403
+			) );
+			exit;
+		}
+
+		/**
+		 * Create callback url
+		 */
+		$callbackUrl = str_replace( 'http://', 'https://', add_query_arg( 'wc-api', 'Wc_Gateway_Payconiq', home_url( '/' ) ) );
+
+		/**
+		 * Add order ID to callback url
+		 */
+		$callbackUrl = add_query_arg( 'webhookId', $order_id, $callbackUrl );
 
 		/**
 		 * @var \wc_payconiq\lib\Payconiq_Client
@@ -129,8 +165,10 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		 * Create Transaction ID
 		 */
 		try {
-			$transaction_id = $payconiq->createTransaction( $order->get_total(), $order->get_currency(), $callbackUrl );
-			Wc_Gateway_Payconiq::log( 'Transaction ID( ' . $transaction_id . ' ) is created for the order id ' . $order_id, 'info' );
+			$transaction = $payconiq->createTransaction( $order->get_total() * 100, $order->get_currency(), $callbackUrl, true );
+
+			$order->add_order_note( 'Payconiq transaction ID ' . $transaction['transactionId'] . ' is created.' );
+			Wc_Gateway_Payconiq::log( 'Transaction ID( ' . $transaction['transactionId'] . ' ) is created for the order id ' . $order_id, 'info' );
 		} catch ( \Exception $e ) {
 			Wc_Gateway_Payconiq::log( 'Transaction is not created in Payconiq', 'error' );
 			wp_die( 'Payconiq Request Failure', 'Payconiq transaction', array( 'response' => 500 ) );
@@ -139,16 +177,21 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		/**
 		 * Save Transaction ID in the order
 		 */
-		$order->add_meta_data( '_payconiq_transaction_id', $transaction_id );
+		update_post_meta( $order_id, '_payconiq_transaction_id', $transaction['transactionId'] );
 
-		/**
-		 * Assemble QR code content
-		 */
-		$qrcode = 'https://payconiq.com/pay/1/' . $transaction_id;
+		echo '<img src="' . $transaction['qrUrl'] . '" />';
 
-		return array(
-			'result'   => 'success',
-			'redirect' => $qrcode,
-		);
+		echo '<input type="hidden" id="order_id" value="' . $order_id . '">';
+
+		wp_enqueue_script( 'payconiq-transaction', WC_PAYCONIQ_URL . 'js/payconiq-transaction.js', array( 'jquery' ), WC_PAYCONIQ_VERSION, true );
+	}
+
+	/**
+	 * Show Payconiq Transaction ID in the backend.
+	 *
+	 * @param $order \WC_Order
+	 */
+	public function show_transaction_id_in_backend( $order ) {
+		echo '<p><strong>' . __( 'Payconiq Transaction ID' ) . ':</strong> <br/>' . get_post_meta( $order->get_id(), '_payconiq_transaction_id', true ) . '</p>';
 	}
 }

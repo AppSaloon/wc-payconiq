@@ -13,12 +13,7 @@ class Payconiq_Config {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_action( 'plugins_loaded', array( $this, 'init_payconiq_gateway_class' ) );
 		add_filter( 'woocommerce_payment_gateways', array( $this, 'add_payconiq_gateway_class' ) );
-	}
-
-	public function init_payconiq_gateway_class() {
-		new Wc_Gateway_Payconiq();
 	}
 
 	public function add_payconiq_gateway_class( $methods ) {

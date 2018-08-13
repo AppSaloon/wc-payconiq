@@ -1,6 +1,6 @@
 {
   "require": {
     "php-di/php-di": "5.0",
-    "eventsquare/payconiq": "^1.0"
+    "eventsquare/payconiq": "^1.0",
   }
 }
