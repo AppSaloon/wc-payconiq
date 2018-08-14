@@ -229,7 +229,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		/**
 		 * Show more information about the Payconiq App.
 		 */
-		echo '<p id="payconiq_message">' . $this->get_option('payment_description' ) . '</p>';
+		echo '<p id="payconiq_message">' . $this->get_option( 'payment_description' ) . '</p>';
 
 		wp_enqueue_script( 'payconiq-transaction', WC_PAYCONIQ_URL . 'js/payconiq-transaction.js', array( 'jquery' ), WC_PAYCONIQ_VERSION, true );
 	}
@@ -242,7 +242,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function show_transaction_id_in_backend( $order ) {
-		echo '<p><strong>' . __( 'Payconiq Transaction ID' ) . ':</strong> <br/>' . get_post_meta( $order->get_id(), '_payconiq_transaction_id', true ) . '</p>';
+		echo '<p><strong>' . __( 'Payconiq Transaction ID' ) . ':</strong> <br/>' . $order->get_transaction_id() . '</p>';
 	}
 
 	/**
@@ -251,7 +251,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function check_response() {
-		$order_id = ( isset( $_GET['webhookId'] ) ) ? $_GET['webhookId'] : false;
+		$order_id = ( isset( $_GET['webhookId'] ) ) ? sanitize_text_field( $_GET['webhookId'] ) : false;
 
 		if ( $order_id == false ) {
 			error_log( 'The order ID is not provided: ' . $order_id );

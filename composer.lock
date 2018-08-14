@@ -4,87 +4,64 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4e488425868a9c8790f8de13d9ef888",
+    "content-hash": "9e98251b1bbf7e4ad0099207949d1c5c",
     "packages": [
         {
-            "name": "chillerlan/php-qrcode",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/chillerlan/php-qrcode.git",
-                "reference": "4241b55f3841872704fc31eecc49b18ab5751f59"
-            },
+            "name": "appsaloon/tribe-ext-list-venues-organizers-shortcodes",
+            "version": "2.1.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/chillerlan/php-qrcode/zipball/4241b55f3841872704fc31eecc49b18ab5751f59",
-                "reference": "4241b55f3841872704fc31eecc49b18ab5751f59",
-                "shasum": ""
+                "url": "https://plugins.appsaloon.be/satispress/tribe-ext-list-venues-organizers-shortcodes/2.1.0",
+                "reference": null,
+                "shasum": "89e776a495036ddcc4ce24abb127b8468a5a4286"
             },
             "require": {
-                "chillerlan/php-traits": "^1.1",
-                "php": ">=7.0.3"
+                "composer/installers": "~1.0"
             },
-            "require-dev": {
-                "chillerlan/php-authenticator": "^2.0",
-                "phpunit/phpunit": "^6.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-v2.0.x-php5": "1.0.8-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "chillerlan\\QRCode\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
+            "type": "wordpress-plugin",
             "authors": [
                 {
-                    "name": "Kazuhiko Arase",
-                    "homepage": "https://github.com/kazuhikoarase"
-                },
-                {
-                    "name": "smiley",
-                    "email": "smiley@chillerlan.net",
-                    "homepage": "https://github.com/codemasher"
+                    "name": "Modern Tribe, Inc",
+                    "homepage": "http://theeventscalendar.com"
                 }
             ],
-            "description": "A QR code generator. PHP 7+",
-            "homepage": "https://github.com/chillerlan/php-qrcode",
-            "keywords": [
-                "qr code"
-            ],
-            "time": "2018-06-20T22:53:20+00:00"
+            "description": "Adds the `[list_venues]` and `[list_organizers]` shortcodes to list Venues and Organizers. Custom linked post types (https://theeventscalendar.com/knowledgebase/linked-post-types/) can be used as well, such as `[tec_list_linked_posts post_type=\"tribe_ext_instructor\"]`."
         },
         {
-            "name": "chillerlan/php-traits",
-            "version": "1.1.13",
+            "name": "composer/installers",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/chillerlan/php-traits.git",
-                "reference": "264759946b6aaeb427346b749fc9639b790b8e7f"
+                "url": "https://github.com/composer/installers.git",
+                "reference": "049797d727261bf27f2690430d935067710049c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/chillerlan/php-traits/zipball/264759946b6aaeb427346b749fc9639b790b8e7f",
-                "reference": "264759946b6aaeb427346b749fc9639b790b8e7f",
+                "url": "https://api.github.com/repos/composer/installers/zipball/049797d727261bf27f2690430d935067710049c2",
+                "reference": "049797d727261bf27f2690430d935067710049c2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0.3"
+                "composer-plugin-api": "^1.0"
+            },
+            "replace": {
+                "roundcube/plugin-installer": "*",
+                "shama/baton": "*"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.5"
+                "composer/composer": "1.0.*@dev",
+                "phpunit/phpunit": "^4.8.36"
             },
-            "type": "library",
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Composer\\Installers\\Plugin",
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
-                    "chillerlan\\Traits\\": "src/"
+                    "Composer\\Installers\\": "src/Composer/Installers"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -93,21 +70,82 @@
             ],
             "authors": [
                 {
-                    "name": "Smiley",
-                    "email": "smiley@chillerlan.net",
-                    "homepage": "https://github.com/codemasher"
+                    "name": "Kyle Robinson Young",
+                    "email": "kyle@dontkry.com",
+                    "homepage": "https://github.com/shama"
                 }
             ],
-            "description": "Some useful traits for PHP 7+",
-            "homepage": "https://github.com/chillerlan/php-traits",
+            "description": "A multi-framework Composer library installer",
+            "homepage": "https://composer.github.io/installers/",
             "keywords": [
-                "PHP7",
-                "container",
-                "dotenv",
-                "helper",
-                "trait"
+                "Craft",
+                "Dolibarr",
+                "Eliasis",
+                "Hurad",
+                "ImageCMS",
+                "Kanboard",
+                "Lan Management System",
+                "MODX Evo",
+                "Mautic",
+                "Maya",
+                "OXID",
+                "Plentymarkets",
+                "Porto",
+                "RadPHP",
+                "SMF",
+                "Thelia",
+                "WolfCMS",
+                "agl",
+                "aimeos",
+                "annotatecms",
+                "attogram",
+                "bitrix",
+                "cakephp",
+                "chef",
+                "cockpit",
+                "codeigniter",
+                "concrete5",
+                "croogo",
+                "dokuwiki",
+                "drupal",
+                "eZ Platform",
+                "elgg",
+                "expressionengine",
+                "fuelphp",
+                "grav",
+                "installer",
+                "itop",
+                "joomla",
+                "kohana",
+                "laravel",
+                "lavalite",
+                "lithium",
+                "magento",
+                "majima",
+                "mako",
+                "mediawiki",
+                "modulework",
+                "modx",
+                "moodle",
+                "osclass",
+                "phpbb",
+                "piwik",
+                "ppi",
+                "puppet",
+                "pxcms",
+                "reindex",
+                "roundcube",
+                "shopware",
+                "silverstripe",
+                "sydes",
+                "symfony",
+                "typo3",
+                "wordpress",
+                "yawik",
+                "zend",
+                "zikula"
             ],
-            "time": "2018-06-22T00:30:47+00:00"
+            "time": "2017-12-29T09:13:20+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -352,9 +390,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "chillerlan/php-qrcode": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

@@ -1,6 +1,6 @@
-# Boilerplate wordpress plugin
+# WooCommerce Payconiq
   
-Deze repository is bedoeld om een standaard te creëren voor alle AppSaloon plugins.
+This plugin does add new payment method to WooCommerce so the visitor can pay through payconiq gateway.
 
 ## Inhoud
 1. [ config ](config/README.md)
@@ -12,17 +12,8 @@ Deze repository is bedoeld om een standaard te creëren voor alle AppSaloon plug
 7. [ tests ](tests/README.md)
 8. [ view ](view/README.md)
 
-## Documentatie
-Elke plugin moet minstens een README.md bestand hebben dat basisinformatie ivm. de plugin bevat. Deze readme staat in de root van de plugin-folder.
-
-Elke property en method moet gedocumenteerd zijn volgens de [DocBlock syntax](https://phpdoc.org/docs/latest/references/phpdoc/basic-syntax.html).
-
-Bij elke method wordt beschreven:
-* wat ze doet
-* welke parameters ze aanvaardt, en waarvoor die dienen
-* wat ze returnt.
-
-Hieronder een voorbeeld:
+## How to use the plugin
+Get the Merchant ID and Secret password from Payconiq.
 
 ### Voor een property:
 
