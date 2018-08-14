@@ -26,7 +26,14 @@ return array(
 		'type'        => 'text',
 		'desc_tip'    => true,
 		'description' => __( 'This controls the description which the user sees during checkout.', 'woocommerce' ),
-		'default'     => __( "Pay via Payconiq; you can pay with your Payconiq app.", 'woocommerce' ),
+		'default'     => __( "Complete the order with Payconiq app.", 'woocommerce' ),
+	),
+	'payment_description'           => array(
+		'title'       => __( 'Payment Description', 'woocommerce' ),
+		'type'        => 'text',
+		'desc_tip'    => true,
+		'description' => __( 'This controls the description when the user sees the QR code.', 'woocommerce' ),
+		'default'     => __( "How to pay: Open the Payconiq app and scan the QR code. It will work for 2 minutes. After the payment, you will be automatically redirected to the order completed page.", 'woocommerce' ),
 	),
 	'advanced'              => array(
 		'title'       => __( 'Advanced options', 'woocommerce' ),
