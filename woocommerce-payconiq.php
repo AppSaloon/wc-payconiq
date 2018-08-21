@@ -22,7 +22,7 @@ define( 'WC_PAYCONIQ_VERSION', '1.0' );
 /**
  * Register autoloader to load files/classes dynamically
  */
-include_once WC_PAYCONIQ_DIR . 'lib/autoloader.php';
+require_once WC_PAYCONIQ_DIR . 'lib/autoloader.php';
 
 /**
  * Load composer/PHP-DI container
@@ -31,7 +31,7 @@ include_once WC_PAYCONIQ_DIR . 'lib/autoloader.php';
  *
  * "php-di/php-di": "5.0"
  */
-include_once WC_PAYCONIQ_DIR . 'lib/ioc/autoload.php';
+require_once WC_PAYCONIQ_DIR . 'lib/ioc/autoload.php';
 
 class Woocommerce_Payconiq {
 
