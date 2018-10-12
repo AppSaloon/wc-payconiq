@@ -21,7 +21,7 @@ define( 'PHPUNIT_TESTSUITE', true );
  */
 function _manually_load_plugin() {
 	// plugin
-	require dirname( dirname( __FILE__ ) ) . '/plugin-boilerplate.php';
+	require dirname( dirname( __FILE__ ) ) . '/woocommerce-payconiq.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 

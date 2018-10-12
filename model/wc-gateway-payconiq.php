@@ -179,7 +179,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		}
 
 		/**
-		 * Create callback url
+		 * Create callback url - default woocommerce gateway endpoint
 		 */
 		$callbackUrl = str_replace( 'http://', 'https://', add_query_arg( 'wc-api', 'wc_gateway_payconiq', home_url( '/' ) ) );
 
@@ -204,8 +204,8 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 			$order->add_order_note( 'Payconiq transaction ID ' . $transaction['transactionId'] . ' is created.' );
 			$this->log( 'Transaction ID( ' . $transaction['transactionId'] . ' ) is created for the order id ' . $order_id, 'info' );
 		} catch ( \Exception $e ) {
-			$this->log( 'Transaction is not created in Payconiq', 'error' );
-			wp_die( 'Payconiq Request Failure', 'Payconiq transaction', array( 'response' => 500 ) );
+			$this->log( 'Transaction is not created in Payconiq: ' . $e->getMessage(), 'error' );
+			wp_die( 'Payconiq Request Failure: ' . $e->getMessage(), 'Payconiq transaction', array( 'response' => 500 ) );
 		}
 
 		/**
@@ -288,8 +288,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		try {
 			$response = $payconiq->retrieveTransaction( $transaction_id, true );
 		} catch ( \Exception $e ) {
-			$this->log( 'Something went wrong with retrieving the transaction.', 'error' );
-			error_log( 'Something went wrong with retrieving the transaction.' );
+			$this->log( 'Something went wrong with retrieving the transaction: ' . $e->getMessage(), 'error' );
 
 			return;
 		}
@@ -299,14 +298,14 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 				$order->payment_complete();
 				$order->update_status( 'completed' );
 				$order->add_order_note( 'The order is completed in Payconiq.' );
-				$this->log( 'The order is completed in Payconiq' );
+				$this->log( 'The order(ID: ' . $order_id . ' ) is completed in Payconiq' );
 				break;
 			case 'CREATION':
 			case 'PENDING':
 			case 'CONFIRMED':
 				$order->update_status( 'pending' );
 				$order->add_order_note( 'Order is pending due to payconiq order status: ' . $response['status'] );
-				$this->log( 'Order is pending due to payconiq order status: ' . $response['status'] );
+				$this->log( 'The order(ID: ' . $order_id . ' ) is pending due to payconiq order status: ' . $response['status'] );
 				break;
 			case 'CANCELED':
 			case 'CANCELED_BY_MERCHANT':
@@ -315,14 +314,9 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 			case 'BLOCKED':
 				$order->update_status( 'cancelled' );
 				$order->add_order_note( 'Order is cancelled due to payconiq order status: ' . $response['status'] );
-				$this->log( 'Order is pending due to payconiq order status: ' . $response['status'], 'error' );
+				$this->log( 'The order(ID: ' . $order_id . ' ) is pending due to payconiq order status: ' . $response['status'], 'error' );
 				break;
 		}
-
-		/**
-		 * Save order changes
-		 */
-		$order->save();
 	}
 
 	/**

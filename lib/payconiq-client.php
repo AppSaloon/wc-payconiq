@@ -16,7 +16,7 @@ class Payconiq_Client {
 	/**
 	 * Construct
 	 *
-	 * @param  string $merchent_id The merchant ID registered with Payconiq.
+	 * @param  string $merchant_id The merchant ID registered with Payconiq.
 	 * @param  string $access_token Used to secure request between merchant backend and Payconiq backend.
 	 * @param bool $sandbox Used to check if sandbox or production
 	 *
@@ -48,7 +48,7 @@ class Payconiq_Client {
 	/**
 	 * Set the merchant id
 	 *
-	 * @param  string $merchent_id The merchant ID registered with Payconiq.
+	 * @param  string $merchant_id The merchant ID registered with Payconiq.
 	 *
 	 * @return self
 	 *
@@ -157,10 +157,11 @@ class Payconiq_Client {
 	 *
 	 * @return string   API url
 	 *
+	 * @version 1.0.0
 	 * @since 1.0.0
 	 */
 	private function getEndpoint( $route = null ) {
-		return ( $this->sandbox == true ) ? $this->endpoint . $route : $this->dev_endpoint . $route;
+		return ( $this->sandbox == true ) ? $this->dev_endpoint . $route : $this->endpoint . $route;
 	}
 
 	/**
@@ -171,10 +172,10 @@ class Payconiq_Client {
 	 * @since 1.0.0
 	 */
 	private function constructHeaders() {
-		return [
+		return array(
 			'Content-Type: application/json',
 			'Authorization: ' . $this->access_token,
-		];
+		);
 	}
 
 	/**
@@ -185,7 +186,7 @@ class Payconiq_Client {
 	 * @param  array $headers
 	 * @param  array $parameters
 	 *
-	 * @return response
+	 * @return array response
 	 *
 	 * @since 1.0.0
 	 */
