@@ -3,21 +3,21 @@
 /**
  * Class Wc_Payconic_Autoloader
  *
- * @since 1.1.0
+ * @since 1.0.0
  */
 class Wc_Payconiq_Autoloader {
 
 	/**
 	 * plugin root namespace
 	 *
-	 * @sice 1.1.0
+	 * @sice 1.0.0
 	 */
 	const ROOT_NAMESPACE = 'wc_payconiq\\';
 
 	/**
 	 * Register autoload method
 	 *
-	 * @since 1.1.0
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		spl_autoload_register( array( $this, 'wc_payconiq_autoloader_callback' ) );
@@ -29,7 +29,7 @@ class Wc_Payconiq_Autoloader {
 	 *
 	 * @param $class
 	 *
-	 * @since 1.1.0
+	 * @since 1.0.0
 	 */
 	public function wc_payconiq_autoloader_callback($class) {
 		if ( strpos( $class, self::ROOT_NAMESPACE ) === 0 ) {
@@ -49,6 +49,6 @@ class Wc_Payconiq_Autoloader {
 /**
  * Start autoloader
  *
- * @since 1.1.0
+ * @since 1.0.0
  */
 new Wc_Payconiq_Autoloader();
