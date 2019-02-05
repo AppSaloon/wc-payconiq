@@ -2,7 +2,7 @@
 /*
 Plugin Name: Payconiq for WooCommerce
 Plugin URI:
-Description: Accept payments by scanning a QR-code through the Payconiq app. Makes it even more easy for your customers to order!.
+Description: Accept payments by scanning a QR-code through the Payconiq app. Makes it even more easy for your customers to order!
 Version: 1.0.0
 Author: AppSaloon
 Author URI: https://www.appsaloon.be/
