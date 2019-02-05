@@ -37,6 +37,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	/**
 	 * Constructor for the gateway.
 	 *
+	 * @version 1.0.1
 	 * @since 1.0.0
 	 */
 	public function __construct() {
@@ -62,6 +63,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		$this->email          = $this->get_option( 'email' );
 		$this->receiver_email = $this->get_option( 'receiver_email', $this->email );
 		$this->identity_token = $this->get_option( 'identity_token' );
+		$this->icon           = $this->get_option( 'image_url' );
 		self::$log_enabled    = $this->debug;
 
 		if ( $this->testmode ) {
