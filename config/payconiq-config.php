@@ -52,7 +52,7 @@ class Payconiq_Config {
 
 		$response['status'] = $order->get_status();
 
-		if ( $order->get_status() == 'completed' ) {
+		if ( $order->get_status() == 'completed' || $order->get_status == 'processing' ) {
 			$response['message'] = $order->get_checkout_order_received_url();
 		} else {
 			//$response['message'] = __( 'Open the Payconiq app and scan the QR code.', 'wc-payconiq' );

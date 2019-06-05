@@ -23,9 +23,9 @@ jQuery( function ( $ ) {
                 },
                 success: function ( data ) {
                     /**
-                     * if order status is completed then redirect page to thank you page
+                     * if order status is completed or processing then redirect page to thank you page
                      */
-                    if ( data.status == 'completed' ) {
+                    if ( data.status == 'completed' || data.status == 'processing' ) {
                         window.location.href = data.message;
                     }
                 }
