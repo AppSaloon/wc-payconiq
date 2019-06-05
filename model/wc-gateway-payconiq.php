@@ -251,6 +251,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	 * Process Payconiq callback Response.
 	 *
 	 * @since 1.0.0
+	 * @version 1.0.2
 	 */
 	public function check_response() {
 		$order_id = ( isset( $_GET['webhookId'] ) ) ? sanitize_text_field( $_GET['webhookId'] ) : false;
@@ -298,9 +299,8 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		switch ( $response['status'] ) {
 			case 'SUCCEEDED':
 				$order->payment_complete();
-				$order->update_status( 'completed' );
-				$order->add_order_note( 'The order is completed in Payconiq.' );
-				$this->log( 'The order(ID: ' . $order_id . ' ) is completed in Payconiq' );
+				$order->add_order_note( 'The order is payed in Payconiq.' );
+				$this->log( 'The order(ID: ' . $order_id . ' ) is payed in Payconiq' );
 				break;
 			case 'CREATION':
 			case 'PENDING':
