@@ -7,6 +7,8 @@ Version: 1.0.2
 Author: AppSaloon
 Author URI: https://www.appsaloon.be/
 License: GPLv3
+Text Domain: woocommerce-payconiq
+Domain Path: /languages
 */
 
 namespace wc_payconiq;
