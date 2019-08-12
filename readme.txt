@@ -37,3 +37,8 @@ For every merchant handling its eCommerce using WooCommerce, integrating Payconi
 
 =How does the extension work?=
 After checkout, a QR-code needs to be scanned by the client using the Payconiq app, confirm the transaction using their PIN code in the app (or fingerprint), and at this point, the payment is immediately received by the merchant. The transaction is visible for the client on screen in the app, and visible to the merchant in their WooCommerce shop and through the Payconiq merchant portal.
+
+== Screenshots ==
+1. Checkout page
+2. Payment in progress
+3. Thank you page
