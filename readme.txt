@@ -1,6 +1,6 @@
-=== WooCommerce Payconiq ===
+=== WC Payconiq ===
 Contributors: aytac,koenhuybrechts,teamappsaloon
-Tags: woocommerce,payment,gateway,payconiq
+Tags: woocommerce,payment,gateway,payconiq, wc
 Requires at least: 4.9
 Tested up to: 5.2.2
 Requires PHP: 5.6
