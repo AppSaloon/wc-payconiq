@@ -88,7 +88,7 @@ class Payconiq_Client {
 	 * @since 1.0.0
 	 */
 	public function createTransaction( $amount, $currency, $callbackUrl ) {
-		$response = $this->curl( 'POST', $this->getEndpoint( '/transactions' ), $this->constructHeaders(), array(
+		$response = $this->make_http_request( 'POST', $this->getEndpoint( '/transactions' ), $this->constructHeaders(), array(
 			'amount'      => $amount,
 			'currency'    => $currency,
 			'callbackUrl' => $callbackUrl,
@@ -112,7 +112,7 @@ class Payconiq_Client {
 	 * @since 1.0.0
 	 */
 	public function retrieveTransaction( $transaction_id ) {
-		$response = $this->curl( 'GET', $this->getEndpoint( '/transactions/' . $transaction_id ), $this->constructHeaders() );
+		$response = $this->make_http_request( 'GET', $this->getEndpoint( '/transactions/' . $transaction_id ), $this->constructHeaders() );
 
 		if ( empty( $response['_id'] ) ) {
 			throw new \Exception( $response['message'] );
@@ -136,7 +136,7 @@ class Payconiq_Client {
 	 * @since 1.0.0
 	 */
 	public function createRefund( $transaction_id, $amount, $currency, $paymentMethod = 'SDD', $description = '' ) {
-		$response = $this->curl( 'POST', $this->getEndpoint( '/transactions/' . $transaction_id . '/refunds' ), $this->constructHeaders(), array(
+		$response = $this->make_http_request( 'POST', $this->getEndpoint( '/transactions/' . $transaction_id . '/refunds' ), $this->constructHeaders(), array(
 			'amount'        => $amount,
 			'currency'      => $currency,
 			'paymentMethod' => $paymentMethod,
@@ -173,13 +173,13 @@ class Payconiq_Client {
 	 */
 	private function constructHeaders() {
 		return array(
-			'Content-Type: application/json',
-			'Authorization: ' . $this->access_token,
+			'Content-Type' => 'application/json',
+			'Authorization' => $this->access_token,
 		);
 	}
 
 	/**
-	 * cURL request
+	 * HTTP request
 	 *
 	 * @param  string $method
 	 * @param  string $url
@@ -190,26 +190,33 @@ class Payconiq_Client {
 	 *
 	 * @since 1.0.0
 	 */
-	private function cURL( $method, $url, $headers = [], $parameters = [] ) {
-		$curl = curl_init();
+	private function make_http_request($method, $url, $headers = [], $parameters = [] ) {
+	    if( $method == 'POST' ) {
+	        $args = array(
+	            'timeout' => 20,
+                'headers' => $headers,
+                'body' => json_encode( $parameters )
+            );
+	        $response = wp_remote_post( $url, $args );
 
-		curl_setopt( $curl, CURLOPT_URL, $url );
-		curl_setopt( $curl, CURLOPT_VERBOSE, 0 );
-		curl_setopt( $curl, CURLOPT_HEADER, 1 );
-		curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, 20 );
-		curl_setopt( $curl, CURLOPT_TIMEOUT, 20 );
-		curl_setopt( $curl, CURLOPT_HTTPHEADER, $headers );
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $curl, CURLOPT_BINARYTRANSFER, true );
-		curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, $method );
-		curl_setopt( $curl, CURLOPT_POSTFIELDS, json_encode( $parameters ) );
+	        if(! is_wp_error( $response ) ) {
+	            return json_decode( wp_remote_retrieve_body( $response ), true );
+            } else {
+	            return array();
+            }
+        } else {
+		    $args = array(
+			    'headers' => $headers
+		    );
 
-		$response    = curl_exec( $curl );
-		$header_size = curl_getinfo( $curl, CURLINFO_HEADER_SIZE );
-		$body        = substr( $response, $header_size );
-		curl_close( $curl );
+		    $response = wp_remote_get($url, $args);
 
-		return json_decode( $body, true );
+		    if(! is_wp_error( $response ) ) {
+			    return json_decode( wp_remote_retrieve_body( $response ), true );
+		    } else {
+			    return array();
+		    }
+	    }
 	}
 
 }

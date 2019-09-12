@@ -68,7 +68,8 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 
 		if ( $this->testmode ) {
 			/* translators: %s: Link to PayPal sandbox testing guide page */
-			$this->description .= ' ' . __( 'SANDBOX ENABLED. You can use sandbox testing accounts only.', 'woocommerce' );
+			$this->description .= ' ' . __( 'SANDBOX ENABLED. You can use sandbox testing accounts only.',
+					'woocommerce' );
 			$this->description = trim( $this->description );
 		}
 
@@ -81,12 +82,12 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
-			'process_admin_options'
+			'process_admin_options',
 		) );
 
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array(
 			$this,
-			'show_transaction_id_in_backend'
+			'show_transaction_id_in_backend',
 		), 10, 1 );
 	}
 
@@ -124,8 +125,8 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	/**
 	 * Logging method.
 	 *
-	 * @param string $message Log message.
-	 * @param string $level Optional. Default 'info'. Possible values:
+	 * @param  string  $message  Log message.
+	 * @param  string  $level  Optional. Default 'info'. Possible values:
 	 *                      emergency|alert|critical|error|warning|notice|info|debug.
 	 *
 	 * @since 1.0.0
@@ -142,7 +143,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	/**
 	 * Redirect from checkout page to payment page
 	 *
-	 * @param int $order_id
+	 * @param  int  $order_id
 	 *
 	 * @return array
 	 *
@@ -160,7 +161,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	/**
 	 * * Renders the receipt page.
 	 *
-	 * @param int $order_id WooCommerce Order ID.
+	 * @param  int  $order_id  WooCommerce Order ID.
 	 *
 	 * @throws \WC_Data_Exception
 	 *
@@ -175,7 +176,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		if ( $order->get_currency() != 'EUR' ) {
 			wp_die( 'The payconiq works only with EUR ', array(
 				'response',
-				403
+				403,
 			) );
 			exit;
 		}
@@ -183,7 +184,8 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		/**
 		 * Create callback url - default woocommerce gateway endpoint
 		 */
-		$callbackUrl = str_replace( 'http://', 'https://', add_query_arg( 'wc-api', 'wc_gateway_payconiq', home_url( '/' ) ) );
+		$callbackUrl = str_replace( 'http://', 'https://',
+			add_query_arg( 'wc-api', 'wc_gateway_payconiq', home_url( '/' ) ) );
 
 		/**
 		 * Add order ID to callback url
@@ -201,13 +203,16 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		 * Create Transaction ID
 		 */
 		try {
-			$transaction = $payconiq->createTransaction( $order->get_total() * 100, $order->get_currency(), $callbackUrl, true );
+			$transaction = $payconiq->createTransaction( $order->get_total() * 100, $order->get_currency(),
+				$callbackUrl, true );
 
 			$order->add_order_note( 'Payconiq transaction ID ' . $transaction['transactionId'] . ' is created.' );
-			$this->log( 'Transaction ID( ' . $transaction['transactionId'] . ' ) is created for the order id ' . $order_id, 'info' );
+			$this->log( 'Transaction ID( ' . $transaction['transactionId'] . ' ) is created for the order id ' . $order_id,
+				'info' );
 		} catch ( \Exception $e ) {
 			$this->log( 'Transaction is not created in Payconiq: ' . $e->getMessage(), 'error' );
-			wp_die( 'Payconiq Request Failure: ' . $e->getMessage(), 'Payconiq transaction', array( 'response' => 500 ) );
+			wp_die( 'Payconiq Request Failure: ' . $e->getMessage(), 'Payconiq transaction',
+				array( 'response' => 500 ) );
 		}
 
 		/**
@@ -233,7 +238,8 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		 */
 		echo '<p id="payconiq_message">' . $this->get_option( 'payment_description' ) . '</p>';
 
-		wp_enqueue_script( 'payconiq-transaction', WC_PAYCONIQ_URL . 'js/payconiq-transaction.js', array( 'jquery' ), WC_PAYCONIQ_VERSION, true );
+		wp_enqueue_script( 'payconiq-transaction', WC_PAYCONIQ_URL . 'js/payconiq-transaction.js', array( 'jquery' ),
+			WC_PAYCONIQ_VERSION, true );
 	}
 
 	/**
@@ -298,7 +304,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 
 		switch ( $response['status'] ) {
 			case 'SUCCEEDED':
-				$order->payment_complete();
+				$order->payment_complete( $response['_id'] );
 				$order->add_order_note( 'The order is payed in Payconiq.' );
 				$this->log( 'The order(ID: ' . $order_id . ' ) is payed in Payconiq' );
 				break;
@@ -316,7 +322,8 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 			case 'BLOCKED':
 				$order->update_status( 'cancelled' );
 				$order->add_order_note( 'Order is cancelled due to payconiq order status: ' . $response['status'] );
-				$this->log( 'The order(ID: ' . $order_id . ' ) is pending due to payconiq order status: ' . $response['status'], 'error' );
+				$this->log( 'The order(ID: ' . $order_id . ' ) is pending due to payconiq order status: ' . $response['status'],
+					'error' );
 				break;
 		}
 	}
@@ -324,7 +331,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	/**
 	 * Can the order be refunded via Payconiq?
 	 *
-	 * @param  \WC_Order $order Order object.
+	 * @param  \WC_Order  $order  Order object.
 	 *
 	 * @return bool
 	 *
@@ -345,9 +352,9 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	/**
 	 * Process a refund if supported.
 	 *
-	 * @param  int $order_id Order ID.
-	 * @param  float $amount Refund amount.
-	 * @param  string $reason Refund reason.
+	 * @param  int  $order_id  Order ID.
+	 * @param  float  $amount  Refund amount.
+	 * @param  string  $reason  Refund reason.
 	 *
 	 * @return bool|\WP_Error
 	 *
@@ -418,11 +425,13 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 
 		if ( $this->testmode ) {
 			if ( $this->get_option( 'sandbox_api_merchant_id' ) && $this->get_option( 'sandbox_api_key' ) ) {
-				$payconiq = new Payconiq_Client( $this->get_option( 'sandbox_api_merchant_id' ), $this->get_option( 'sandbox_api_key' ), true );
+				$payconiq = new Payconiq_Client( $this->get_option( 'sandbox_api_merchant_id' ),
+					$this->get_option( 'sandbox_api_key' ), true );
 			}
 		} else {
 			if ( $this->get_option( 'api_merchant_id' ) && $this->get_option( 'api_key' ) ) {
-				$payconiq = new Payconiq_Client( $this->get_option( 'api_merchant_id' ), $this->get_option( 'api_key' ), false );
+				$payconiq = new Payconiq_Client( $this->get_option( 'api_merchant_id' ), $this->get_option( 'api_key' ),
+					false );
 			}
 		}
 
