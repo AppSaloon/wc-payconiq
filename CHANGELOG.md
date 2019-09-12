@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update of the changelog
 
+## [1.0.3] - 2019-10-12
+- The API call works through wp_remote_post instead of Curl
+- Redirect to the cart when the payment is cancelled with a notice message
+
 ## [1.0.2] - 2019-06-05
 - Removed updating the order status to complete when it is payed in the payconiq.
 
