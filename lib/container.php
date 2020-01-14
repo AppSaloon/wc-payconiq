@@ -63,8 +63,6 @@ Final class Container implements Container_Interface {
 	 */
 	public function build_container() {
 		$this->builder->addDefinitions( array(
-			'plugin_activate'   => DI\object( 'wc_payconiq\config\Plugin_Activate' ),
-			'plugin_deactivate' => DI\object( 'wc_payconiq\config\Plugin_Deactivate' ),
 			'payconiq_config' => DI\object( 'wc_payconiq\config\Payconiq_Config' )
 		) );
 

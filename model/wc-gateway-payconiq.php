@@ -43,9 +43,9 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	public function __construct() {
 		$this->id                 = 'payconiq';
 		$this->has_fields         = false;
-		$this->order_button_text  = __( 'Proceed to Payconiq', 'woocommerce' );
-		$this->method_title       = __( 'Payconiq', 'woocommerce' );
-		$this->method_description = __( 'Take payments through Payconiq app.', 'woocommerce' );
+		$this->order_button_text  = esc_html__( 'Proceed to Payconiq', 'woocommerce' );
+		$this->method_title       = esc_html__( 'Payconiq', 'woocommerce' );
+		$this->method_description = esc_html__( 'Take payments through Payconiq app.', 'woocommerce' );
 		$this->supports           = array(
 			'products',
 			'refunds',
@@ -68,7 +68,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 
 		if ( $this->testmode ) {
 			/* translators: %s: Link to PayPal sandbox testing guide page */
-			$this->description .= ' ' . __( 'SANDBOX ENABLED. You can use sandbox testing accounts only.',
+			$this->description .= ' ' . esc_html__( 'SANDBOX ENABLED. You can use sandbox testing accounts only.',
 					'woocommerce' );
 			$this->description = trim( $this->description );
 		}
@@ -250,7 +250,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function show_transaction_id_in_backend( $order ) {
-		echo '<p><strong>' . __( 'Payconiq Transaction ID' ) . ':</strong> <br/>' . $order->get_transaction_id() . '</p>';
+		echo '<p><strong>' . esc_html__( 'Payconiq Transaction ID' ) . ':</strong> <br/>' . $order->get_transaction_id() . '</p>';
 	}
 
 	/**
@@ -402,7 +402,8 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 
 			$order->add_order_note(
 			/* translators: 1: Refund amount, 2: Refund ID */
-				sprintf( __( 'Refunded %1$s - Refund ID: %2$s', 'woocommerce' ), $result['amount'], $result['_id'] )
+				sprintf( esc_html__( 'Refunded %1$s - Refund ID: %2$s', 'woocommerce' ), $result['amount'],
+					$result['_id'] )
 			);
 
 			return true;

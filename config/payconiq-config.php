@@ -59,7 +59,7 @@ class Payconiq_Config {
 				$response['message'] = $order->get_checkout_order_received_url();
 				break;
 			case 'cancelled':
-				$response['message'] = $this->get_cancel_url($order);
+				$response['message'] = $this->get_cancel_url( $order );
 				break;
 		}
 
@@ -76,7 +76,7 @@ class Payconiq_Config {
 	 *
 	 * @since 1.0.3
 	 */
-	public function get_cancel_url($order) {
+	public function get_cancel_url( $order ) {
 		return add_query_arg(
 			array(
 				'cancel_order' => 'true',
@@ -99,29 +99,35 @@ class Payconiq_Config {
 			isset( $_GET['cancel_order'] ) &&
 			isset( $_GET['order'] ) &&
 			isset( $_GET['order_id'] ) &&
-			( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'woocommerce-cancel_order-payconiq' ) ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ),
+					'woocommerce-cancel_order-payconiq' ) )
 		) {
 			wc_nocache_headers();
 
-			$order_key        = wp_unslash( $_GET['order'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$order_id         = absint( $_GET['order_id'] );
+			$order_key        = wp_unslash( sanitize_text_field( $_GET['order'] ) );
+			$order_id         = absint( sanitize_text_field( $_GET['order_id'] ) );
 			$order            = wc_get_order( $order_id );
 			$user_can_cancel  = current_user_can( 'cancel_order', $order_id );
-			$order_can_cancel = $order->has_status( apply_filters( 'woocommerce_valid_order_statuses_for_cancel', array( 'pending', 'failed', 'cancelled' ), $order ) );
+			$order_can_cancel = $order->has_status( apply_filters( 'woocommerce_valid_order_statuses_for_cancel',
+				array( 'pending', 'failed', 'cancelled' ), $order ) );
 
-			if ( $user_can_cancel && $order_can_cancel && $order->get_id() === $order_id && hash_equals( $order->get_order_key(), $order_key ) ) {
+			if ( $user_can_cancel && $order_can_cancel && $order->get_id() === $order_id && hash_equals( $order->get_order_key(),
+					$order_key ) ) {
 
 				// Cancel the order + restore stock.
 				WC()->session->set( 'order_awaiting_payment', false );
 
-				wc_add_notice( apply_filters( 'woocommerce_order_cancelled_notice', __( 'Your order was cancelled.', 'woocommerce' ) ), apply_filters( 'woocommerce_order_cancelled_notice_type', 'notice' ) );
+				wc_add_notice( apply_filters( 'woocommerce_order_cancelled_notice',
+					esc_html__( 'Your order was cancelled.', 'woocommerce' ) ),
+					apply_filters( 'woocommerce_order_cancelled_notice_type', 'notice' ) );
 
 				do_action( 'woocommerce_cancelled_order', $order->get_id() );
 
 			} elseif ( $user_can_cancel && ! $order_can_cancel ) {
-				wc_add_notice( __( 'Your order can no longer be cancelled. Please contact us if you need assistance.', 'woocommerce' ), 'error' );
+				wc_add_notice( esc_html__( 'Your order can no longer be cancelled. Please contact us if you need assistance.',
+					'woocommerce' ), 'error' );
 			} else {
-				wc_add_notice( __( 'Invalid order.', 'woocommerce' ), 'error' );
+				wc_add_notice( esc_html__( 'Invalid order.', 'woocommerce' ), 'error' );
 			}
 		}
 	}
