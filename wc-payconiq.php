@@ -3,7 +3,7 @@
 Plugin Name: WC Payconiq
 Plugin URI:
 Description: Accept payments by scanning a QR-code through the Payconiq app. Makes it even more easy for your customers to order!
-Version: 1.0.3
+Version: 1.0.4
 Author: AppSaloon
 Author URI: https://www.appsaloon.be/
 License: GPLv3
@@ -19,7 +19,7 @@ use wc_payconiq\lib\Container_Interface;
 define( 'WC_PAYCONIQ_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WC_PAYCONIQ_URL', plugin_dir_url( __FILE__ ) );
 define( 'WC_PAYCONIQ_FILE', __FILE__ );
-define( 'WC_PAYCONIQ_VERSION', '1.0.3' );
+define( 'WC_PAYCONIQ_VERSION', '1.0.4' );
 
 /**
  * Register autoloader to load files/classes dynamically

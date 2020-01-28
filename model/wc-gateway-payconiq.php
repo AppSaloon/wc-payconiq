@@ -257,13 +257,12 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 	 * Process Payconiq callback Response.
 	 *
 	 * @since 1.0.0
-	 * @version 1.0.2
+	 * @version 1.0.4
 	 */
 	public function check_response() {
 		$order_id = ( isset( $_GET['webhookId'] ) ) ? sanitize_text_field( $_GET['webhookId'] ) : false;
 
 		if ( $order_id == false ) {
-			error_log( 'The order ID is not provided: ' . $order_id );
 			$this->log( 'The order ID is not provided: ' . $order_id, 'error' );
 
 			return;
@@ -272,7 +271,6 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		if ( $order == false ) {
-			error_log( 'The order ID is not valid: ' . $order_id );
 			$this->log( 'The order ID is not valid: ' . $order_id, 'error' );
 
 			return;
@@ -288,7 +286,6 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		$transaction_id = $order->get_transaction_id();
 
 		if ( empty( $transaction_id ) ) {
-			error_log( 'Transaction ID is not found.' );
 			$this->log( 'Transaction ID is not found.', 'error' );
 
 			return;
@@ -302,9 +299,12 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 			return;
 		}
 
-		switch ( $response['status'] ) {
+		$status       = sanitize_text_field( $response['status'] );
+		$web_order_id = sanitize_text_field( $response['_id'] );
+
+		switch ( $status ) {
 			case 'SUCCEEDED':
-				$order->payment_complete( $response['_id'] );
+				$order->payment_complete( $web_order_id );
 				$order->add_order_note( 'The order is payed in Payconiq.' );
 				$this->log( 'The order(ID: ' . $order_id . ' ) is payed in Payconiq' );
 				break;
@@ -312,8 +312,8 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 			case 'PENDING':
 			case 'CONFIRMED':
 				$order->update_status( 'pending' );
-				$order->add_order_note( 'Order is pending due to payconiq order status: ' . $response['status'] );
-				$this->log( 'The order(ID: ' . $order_id . ' ) is pending due to payconiq order status: ' . $response['status'] );
+				$order->add_order_note( 'Order is pending due to payconiq order status: ' . $status );
+				$this->log( 'The order(ID: ' . $order_id . ' ) is pending due to payconiq order status: ' . $status );
 				break;
 			case 'CANCELED':
 			case 'CANCELED_BY_MERCHANT':
@@ -321,8 +321,8 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 			case 'TIMEDOUT':
 			case 'BLOCKED':
 				$order->update_status( 'cancelled' );
-				$order->add_order_note( 'Order is cancelled due to payconiq order status: ' . $response['status'] );
-				$this->log( 'The order(ID: ' . $order_id . ' ) is pending due to payconiq order status: ' . $response['status'],
+				$order->add_order_note( 'Order is cancelled due to payconiq order status: ' . $status );
+				$this->log( 'The order(ID: ' . $order_id . ' ) is pending due to payconiq order status: ' . $status,
 					'error' );
 				break;
 		}
@@ -369,13 +369,13 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		if ( $order->get_currency() != 'EUR' ) {
 			$this->log( __( 'payconiq works only with EUR', 'wc-payconiq' ), 'error' );
 
-			return new \WP_Error( 'error', __( 'payconiq works only with EUR', 'wc-payconiq' ) );
+			return new \WP_Error( 'error', esc_html__( 'payconiq works only with EUR', 'wc-payconiq' ) );
 		}
 
 		if ( ! $this->can_refund_order( $order ) ) {
 			$this->log( __( 'Refund failed due to invalid credentials.', 'wc-payconiq' ), 'error' );
 
-			return new \WP_Error( 'error', __( 'Refund failed due to invalid credentials.', 'wc-payconiq' ) );
+			return new \WP_Error( 'error', esc_html__( 'Refund failed due to invalid credentials.', 'wc-payconiq' ) );
 		}
 
 		$transaction_id = $order->get_transaction_id();
@@ -383,7 +383,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		if ( ! $transaction_id ) {
 			$this->log( __( 'Transaction ID is not found.', 'wc-payconiq' ), 'error' );
 
-			return new \WP_Error( 'error', __( 'Transaction ID is not found.', 'wc-payconiq' ) );
+			return new \WP_Error( 'error', esc_html__( 'Transaction ID is not found.', 'wc-payconiq' ) );
 		}
 
 		$payconiq = $this->get_payconiq_client();
@@ -391,7 +391,7 @@ class Wc_Gateway_Payconiq extends \WC_Payment_Gateway {
 		if ( $payconiq == false ) {
 			$this->log( __( 'Payconiq credentials are not filled in', 'wc-payconiq' ), 'error' );
 
-			return new \WP_Error( 'error', __( 'Payconiq credentials are not filled in', 'wc-payconiq' ) );
+			return new \WP_Error( 'error', esc_html__( 'Payconiq credentials are not filled in', 'wc-payconiq' ) );
 		}
 
 
